@@ -76,8 +76,35 @@ public class RationalTest {
 
     @Test(expected = ArithmeticException.class)
     public void testExceptionDenominator() throws ParseException {
-        Rational test1 = new Rational(1, 0);
-        String str = "numerator:3, denominator:0";
+        Rational test1 = new Rational(1, 1);
+        String str = "numerator:4, denominator:0";
         Rational test2 = new Rational(str);
+    }
+
+    @Test
+    public void setSortBy() {
+        Rational[] arr = new Rational[3];
+        arr[0] = new Rational(3, 4);
+        arr[1] = new Rational(2, 6);
+        arr[2] = new Rational(8, 3);
+
+        try {
+            sortAndPrint(arr);
+
+            Rational.setSortBy("denominator");
+            sortAndPrint(arr);
+        } catch (RationalException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void sortAndPrint(Rational[] arr) {
+        System.out.println("Sorted by: " + Rational.getSortBy());
+
+        Arrays.sort(arr);
+        for(int i = 0; i < arr.length; i++)
+            System.out.println(arr[i].toString());
+
+        System.out.println("\n");
     }
 }

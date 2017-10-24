@@ -1,14 +1,15 @@
 import java.text.ParseException;
-import java.util.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Rational implements Comparable<Rational>, Iterator<Integer> {
     private static Rational zero = new Rational(0, 1);
 
-    private int numerator;   // the numerator
-    private int denominator;   // the denominator
+    private int numerator;
+    private int denominator;
 
     public Rational() { numerator = 0; denominator = 1; }
-    // create and initialize a new Rational object
+    /** create and initialize a new Rational object */
     public Rational(int num, int denom) {
         if (denom == 0) {
             throw new ArithmeticException("Denominator is zero");
@@ -26,11 +27,11 @@ public class Rational implements Comparable<Rational>, Iterator<Integer> {
         }
     }
 
-    // return the numerator and denominator of (this)
+    /** return the numerator and denominator of (this) */
     public int getNumerator()   { return numerator; }
     public int getDenominator() { return denominator; }
 
-    // is this Rational object equal to y?
+    /** is this Rational object equal to y? */
     public boolean equals(Object y) {
         if (y == null) return false;
         if (y.getClass() != this.getClass()) return false;
@@ -38,7 +39,7 @@ public class Rational implements Comparable<Rational>, Iterator<Integer> {
         return compareTo(b) == 0;
     }
 
-    // return gcd(|m|, |n|)
+    /** return gcd(|m|, |n|) */
     private static int gcd(int m, int n) {
         if (m < 0) m = -m;
         if (n < 0) n = -n;
@@ -46,14 +47,14 @@ public class Rational implements Comparable<Rational>, Iterator<Integer> {
         else return gcd(n, m % n);
     }
 
-    // return lcm(|m|, |n|)
+    /** return lcm(|m|, |n|) */
     private static int lcm(int m, int n) {
         if (m < 0) m = -m;
         if (n < 0) n = -n;
         return m * (n / gcd(m, n));    // parentheses important to avoid overflow
     }
 
-    // return a * b, staving off overflow as much as possible by cross-cancellation
+    /** return a * b, staving off overflow as much as possible by cross-cancellation */
     public Rational multiply(Rational b) {
         Rational a = this;
 
@@ -63,7 +64,7 @@ public class Rational implements Comparable<Rational>, Iterator<Integer> {
         return new Rational(c.numerator * d.numerator, c.denominator * d.denominator);
     }
 
-    // return a + b, staving off overflow
+    /** return a + b, staving off overflow */
     public Rational plus(Rational b) {
         Rational a = this;
 
@@ -85,12 +86,12 @@ public class Rational implements Comparable<Rational>, Iterator<Integer> {
         return s;
     }
 
-    // return -a
+    /** return -a */
     public Rational negate() {
         return new Rational(-numerator, denominator);
     }
 
-    // return a - b
+    /** return a - b */
     public Rational minus(Rational b) {
         Rational a = this;
         return a.plus(b.negate());
@@ -98,7 +99,7 @@ public class Rational implements Comparable<Rational>, Iterator<Integer> {
 
     public Rational reciprocal() { return new Rational(denominator, numerator);  }
 
-    // return a / b
+    /** return a / b */
     public Rational divides(Rational b) {
         Rational a = this;
         return a.multiply(b.reciprocal());
@@ -124,22 +125,40 @@ public class Rational implements Comparable<Rational>, Iterator<Integer> {
         }
     }
 
-    //Comparable<Rational>
-    @Override
-    public int compareTo(Rational b) {
-        Rational a = this;
-        int lhs = a.numerator * b.denominator;
-        int rhs = a.denominator * b.numerator;
-        if (lhs < rhs)
-            return -1;
-        if (lhs > rhs)
-            return 1;
-        return 0;
+    /** Sorting */
+    private static String[] sorting = {"numerator", "denominator"};
+    private static int sortBy = 0;
+
+    public static void setSortBy(String sotrBy) throws RationalException {
+        boolean notFound = true;
+        for (int i = 0; i < sorting.length; i++){
+            if(sotrBy.equals(sorting[i])){
+                Rational.sortBy = i;
+                notFound = false;
+                break;
+            }
+        }
+        if(notFound)
+            throw new RationalException("Invalid sorting arguments");
     }
 
-    private static String[] sorting = {"numerator", "denominator"};
+    public static String getSortBy() {
+        return sorting[sortBy];
+    }
 
-    //Iterator<Integer>
+    /** Comparable<Rational> */
+    public int compareTo(Rational r) {
+        switch (sortBy){
+            case 0:
+                return Integer.compare(this.numerator, r.numerator);
+            case 1:
+                return Integer.compare(this.denominator, r.denominator);
+        }
+        return 0;
+
+    }
+
+    /** Iterator<Integer> */
     private int iteration = 0;
     @Override
     public boolean hasNext() { return iteration < sorting.length; }
