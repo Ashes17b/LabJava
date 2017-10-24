@@ -1,6 +1,7 @@
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.ParseException;
 import java.util.Iterator;
 import java.util.*;
 
@@ -74,7 +75,9 @@ public class RationalTest {
     }
 
     @Test(expected = ArithmeticException.class)
-    public void testExceptionDenominator() {
-        Rational r = new Rational(1, 0);
+    public void testExceptionDenominator() throws ParseException {
+        Rational test1 = new Rational(1, 0);
+        String str = "numerator:3, denominator:0";
+        Rational test2 = new Rational(str);
     }
 }

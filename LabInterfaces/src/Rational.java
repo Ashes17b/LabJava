@@ -106,8 +106,8 @@ public class Rational implements Comparable<Rational>, Iterator<Integer> {
 
     /** Construct a rational with string numerator and denominator */
     public Rational(String str) throws ParseException {
-        int num = Integer.parseInt(str.substring(str.indexOf("x") + 1, str.indexOf("/")));
-        int denom = Integer.parseInt(str.substring(str.indexOf("/y") + 2, str.length()));
+        int num = Integer.parseInt(str.substring(str.indexOf("numerator:") + 10, str.indexOf(",")));
+        int denom = Integer.parseInt(str.substring(str.indexOf("denominator:") + 12, str.length()));
         if (denom == 0) {
             throw new ArithmeticException("Denominator is zero");
         }
