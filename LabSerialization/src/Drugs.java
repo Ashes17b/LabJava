@@ -1,4 +1,5 @@
 import java.io.*;
+import java.text.ParseException;
 import java.util.*;
 
 public class Drugs {
@@ -38,7 +39,7 @@ public class Drugs {
 	
     private static Scanner fin = new Scanner(System.in);
 
-    static Drug read_drug() {
+    static Drug read_drug() throws ParseException {
         if (fin.hasNextLine()) {
             return Drug.read(fin);
         }
@@ -50,7 +51,7 @@ public class Drugs {
         f.delete();
     }
 	
-    static void append_file() throws FileNotFoundException, IOException {
+    static void append_file() throws IOException, ParseException {
         Drug drug;
         System.out.println("Enter drug data: ");
         try (RandomAccessFile raf = new RandomAccessFile(filename, "rw")) {
@@ -60,7 +61,7 @@ public class Drugs {
         }
     }
 
-    static void print_file() throws FileNotFoundException, IOException, ClassNotFoundException {
+    static void print_file() throws IOException, ClassNotFoundException {
         try (RandomAccessFile raf = new RandomAccessFile(filename, "rw")) {
             long pos;
             while ((pos = raf.getFilePointer()) < raf.length()) {
